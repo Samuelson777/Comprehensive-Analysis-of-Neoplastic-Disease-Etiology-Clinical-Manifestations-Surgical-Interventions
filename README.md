@@ -3,9 +3,7 @@
 **Author:** SAMUELSON G, Independent Researcher
 
 [![DOI](https://img.shields.io/badge/DOI%20ResearchGate-10.13140/RG.2.2.19070.75845-blue)](https://doi.org/10.13140/RG.2.2.19070.75845)  
-[![Zenodo](https://img.shields.io/badge/Zenodo-blue)](https://zenodo.org/records/19544116)  
-[![Academia.edu](https://img.shields.io/badge/Academia.edu-blue)](https://www.academia.edu/165640547/Comprehensive_Analysis_of_Atmospheric_Pollution_Integrating_Fundamental_Chemistry_Epidemiological_Metrics_Sociological_Paradigms_and_Policy_Frameworks)  
-[![OSF](https://img.shields.io/badge/OSF-blue)](https://osf.io/preprints/thesiscommons/3k4vf_v1)
+[![Zenodo](https://img.shields.io/badge/Zenodo-blue)](https://zenodo.org/records/20356490)  
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
 
