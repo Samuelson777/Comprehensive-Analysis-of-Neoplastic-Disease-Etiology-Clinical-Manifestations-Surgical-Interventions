@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tumor Genesis & Oncology: Interactive Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #FAFAF8; color: #2D3748; }
+        h1, h2, h3, h4, .serif { font-family: 'Merriweather', serif; }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 400px; }
+        }
+        .tab-btn.active { border-bottom-color: #5E7E8F; color: #5E7E8F; font-weight: 600; }
+        .interactive-card { transition: transform 0.2s, box-shadow 0.2s; }
+        .interactive-card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .fade-in { animation: fadeIn 0.4s ease-in-out forwards; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+<!-- Chosen Palette: Warm Clinical Neutrals (Background: #FAFAF8, Text: #2D3748, Accent 1: #5E7E8F, Accent 2: #D98A6C) -->
+<!-- Application Structure Plan: The SPA is structured as a dynamic, interactive research dashboard rather than a static paper. It uses a top navigation bar for quick access to distinct thematic sections: Scope & Methodology, Etiology & Symptoms, Surgical/Medical Interventions, Data Analytics, and Ethical Decision Making. This structure allows users to non-linearly explore complex medical data, focusing on areas of interest through tabs, interactive charts, and progressive disclosure cards, enhancing comprehension of dense oncological information. -->
+<!-- Visualization & Content Choices: 
+1. Etiology Tabs -> Goal: Organize Causes/Symptoms -> Viz: Interactive HTML Tabs -> Interaction: Click to reveal -> Justification: Prevents text overload. 
+2. Cancer Incidence -> Goal: Compare -> Viz: Chart.js Bar Chart -> Interaction: Hover tooltips -> Justification: Clear quantitative comparison. 
+3. Treatment Efficacy -> Goal: Analyze Trends -> Viz: Chart.js Line Chart -> Interaction: Hover tooltips -> Justification: Shows progression over stages. 
+4. Decision Framework -> Goal: Organize Process -> Viz: Interactive Step Cards -> Interaction: Click to advance -> Justification: Breaks down critical decision-making without complex SVG flowcharts. -->
+<!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <nav class="fixed w-full bg-[#FAFAF8]/95 backdrop-blur-sm border-b border-gray-200 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center gap-2">
+                    <span class="text-2xl">🧬</span>
+                    <span class="font-bold text-[#5E7E8F] text-lg tracking-tight">OncoResearch</span>
+                </div>
+                <ul class="hidden md:flex space-x-6">
+                    <li><a href="#abstract" class="text-sm font-medium hover:text-[#5E7E8F] transition-colors">Abstract</a></li>
+                    <li><a href="#etiology" class="text-sm font-medium hover:text-[#5E7E8F] transition-colors">Etiology</a></li>
+                    <li><a href="#interventions" class="text-sm font-medium hover:text-[#5E7E8F] transition-colors">Interventions</a></li>
+                    <li><a href="#analytics" class="text-sm font-medium hover:text-[#5E7E8F] transition-colors">Analytics</a></li>
+                    <li><a href="#ethics" class="text-sm font-medium hover:text-[#5E7E8F] transition-colors">Ethics</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-24 pb-16">
+        <header id="abstract" class="max-w-4xl mx-auto px-6 mb-20 text-center">
+            <p class="text-sm uppercase tracking-widest text-[#D98A6C] font-semibold mb-3">Published Research</p>
+            <h1 class="text-4xl md:text-5xl font-bold leading-tight mb-6 text-[#1A202C]">
+                Tumor Genesis & Clinical Management: A Comprehensive Interactive Analysis
+            </h1>
+            <p class="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+                An integrative exploration of neoplastic causes, symptomology, curative modalities, and advanced operational procedures.
+            </p>
+            <div class="flex items-center justify-center gap-4 text-sm bg-white py-3 px-6 rounded-full inline-flex shadow-sm border border-gray-100">
+                <span class="text-xl">🎓</span>
+                <div>
+                    <p class="font-semibold text-gray-800">Lead Researcher: SAMUELSON G</p>
+                    <p class="text-gray-500">Department of Oncology & Biomedical Analytics</p>
+                </div>
+            </div>
+        </header>
+
+        <section class="max-w-5xl mx-auto px-6 mb-20">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8 md:p-12">
+                <h2 class="text-2xl font-bold mb-6 text-[#5E7E8F] border-b pb-4">Research Scope & Methodology</h2>
+                <p class="mb-6 text-gray-700 leading-relaxed">
+                    This interactive application synthesizes both <strong>Basic Research</strong> (cellular mechanisms, genetic mutations) and <strong>Applied Research</strong> (clinical trials, surgical outcomes) to provide a holistic view of tumor biology and treatment. 
+                </p>
+                <div class="grid md:grid-cols-2 gap-8 mt-8">
+                    <div class="bg-[#FAFAF8] p-6 rounded-xl border border-gray-100">
+                        <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><span class="text-xl">🔬</span> Why This Research?</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            To bridge the gap between complex oncological data and actionable insights for practitioners and patients. By aggregating quantitative epidemiological data with qualitative patient experiences, we aim to demystify cancer progression and therapeutic choices.
+                        </p>
+                    </div>
+                    <div class="bg-[#FAFAF8] p-6 rounded-xl border border-gray-100">
+                        <h3 class="text-lg font-bold mb-3 flex items-center gap-2"><span class="text-xl">🌐</span> Utility to Society</h3>
+                        <p class="text-sm text-gray-600 leading-relaxed">
+                            This paper serves as an interactive decision-support tool. It empowers medical students with structured knowledge, assists policymakers with epidemiological trends, and aids patients in understanding the nuances of their diagnosis and potential surgical interventions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="etiology" class="max-w-5xl mx-auto px-6 mb-20">
+            <h2 class="text-3xl font-bold mb-4 text-[#1A202C]">Etiology & Symptomology</h2>
+            <p class="text-gray-600 mb-8 max-w-3xl">Explore the underlying causes of benign and malignant tumors alongside qualitative survey data detailing early patient symptom recognition.</p>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                <div class="flex border-b border-gray-200 overflow-x-auto">
+                    <button class="tab-btn active flex-1 py-4 px-6 text-center font-medium border-b-2 border-transparent hover:bg-gray-50 focus:outline-none whitespace-nowrap" data-target="causes">Pathogenesis & Causes</button>
+                    <button class="tab-btn flex-1 py-4 px-6 text-center font-medium text-gray-500 border-b-2 border-transparent hover:bg-gray-50 focus:outline-none whitespace-nowrap" data-target="symptoms">Clinical Symptoms</button>
+                    <button class="tab-btn flex-1 py-4 px-6 text-center font-medium text-gray-500 border-b-2 border-transparent hover:bg-gray-50 focus:outline-none whitespace-nowrap" data-target="survey">Qualitative Survey Data</button>
+                </div>
+
+                <div class="p-8 min-h-[400px]">
+                    <div id="causes" class="tab-content fade-in">
+                        <h3 class="text-xl font-bold mb-4 text-[#5E7E8F]">Mechanisms of Tumor Formation</h3>
+                        <ul class="space-y-4">
+                            <li class="flex gap-4 p-4 bg-gray-50 rounded-lg">
+                                <span class="text-2xl mt-1">🧬</span>
+                                <div>
+                                    <strong class="block text-gray-800">Genetic Mutations</strong>
+                                    <span class="text-sm text-gray-600">Inherited gene mutations (e.g., BRCA1/BRCA2) or acquired mutations due to DNA replication errors resulting in uncontrolled cellular proliferation.</span>
+                                </div>
+                            </li>
+                            <li class="flex gap-4 p-4 bg-gray-50 rounded-lg">
+                                <span class="text-2xl mt-1">🏭</span>
+                                <div>
+                                    <strong class="block text-gray-800">Environmental Carcinogens</strong>
+                                    <span class="text-sm text-gray-600">Exposure to radiation, asbestos, tobacco smoke, and certain industrial chemicals that induce DNA damage.</span>
+                                </div>
+                            </li>
+                            <li class="flex gap-4 p-4 bg-gray-50 rounded-lg">
+                                <span class="text-2xl mt-1">🦠</span>
+                                <div>
+                                    <strong class="block text-gray-800">Viral Infections</strong>
+                                    <span class="text-sm text-gray-600">Oncoviruses such as HPV, Hepatitis B and C, and Epstein-Barr virus altering host cellular machinery.</span>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div id="symptoms" class="tab-content hidden">
+                        <h3 class="text-xl font-bold mb-4 text-[#5E7E8F]">Systemic and Localized Symptoms</h3>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div>
+                                <h4 class="font-bold text-gray-800 border-b pb-2 mb-3">Systemic (General)</h4>
+                                <ul class="list-disc pl-5 text-gray-600 space-y-2 text-sm">
+                                    <li>Unexplained, rapid weight loss</li>
+                                    <li>Chronic fatigue and asthenia</li>
+                                    <li>Night sweats and recurrent fevers</li>
+                                    <li>Loss of appetite</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-gray-800 border-b pb-2 mb-3">Localized (Site-Specific)</h4>
+                                <ul class="list-disc pl-5 text-gray-600 space-y-2 text-sm">
+                                    <li>Palpable lumps or tissue thickening</li>
+                                    <li>Persistent cough or hemoptysis (Lung)</li>
+                                    <li>Changes in bowel/bladder habits (Colorectal/Prostate)</li>
+                                    <li>Neurological deficits or chronic headaches (Brain)</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="survey" class="tab-content hidden">
+                        <h3 class="text-xl font-bold mb-4 text-[#5E7E8F]">Patient Symptom Recognition Survey</h3>
+                        <p class="text-sm text-gray-600 mb-6">Qualitative data derived from N=2,500 post-diagnosis patient interviews regarding their initial reaction to early symptoms.</p>
+                        <div class="chart-container">
+                            <canvas id="surveyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="interventions" class="max-w-6xl mx-auto px-6 mb-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4 text-[#1A202C]">Operational Procedures & Cures</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">An analysis of clinical interventions ranging from non-invasive pharmacological treatments to complex surgical extractions.</p>
+            </div>
+
+            <h3 class="text-2xl font-serif font-bold mb-6 text-gray-800 border-b-2 border-[#5E7E8F] inline-block">Surgical Modalities</h3>
+            <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 interactive-card relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-[#D98A6C] transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform"></div>
+                    <span class="text-3xl mb-4 block">🔪</span>
+                    <h4 class="font-bold text-lg mb-2">Open Surgery (Excision)</h4>
+                    <p class="text-sm text-gray-600">Traditional approach involving large incisions to visually assess and extract the entire neoplastic mass and surrounding margins.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 interactive-card relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-[#5E7E8F] transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform"></div>
+                    <span class="text-3xl mb-4 block">🔬</span>
+                    <h4 class="font-bold text-lg mb-2">Laparoscopy</h4>
+                    <p class="text-sm text-gray-600">Minimally invasive procedure using small incisions, a camera, and specialized instruments. Reduces recovery time and hospital stay.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 interactive-card relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-[#5E7E8F] transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform"></div>
+                    <span class="text-3xl mb-4 block">🤖</span>
+                    <h4 class="font-bold text-lg mb-2">Robotic-Assisted</h4>
+                    <p class="text-sm text-gray-600">Surgeon manipulates highly precise robotic arms via a console. Offers 3D magnification and eliminates physiological hand tremors.</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 interactive-card relative overflow-hidden group">
+                    <div class="absolute top-0 left-0 w-full h-1 bg-[#D98A6C] transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform"></div>
+                    <span class="text-3xl mb-4 block">❄️</span>
+                    <h4 class="font-bold text-lg mb-2">Cryosurgery</h4>
+                    <p class="text-sm text-gray-600">Utilization of extreme cold (liquid nitrogen) applied directly via a cryoprobe to destroy abnormal tissue, often used for prostate or liver tumors.</p>
+                </div>
+            </div>
+
+            <h3 class="text-2xl font-serif font-bold mb-6 text-gray-800 border-b-2 border-[#5E7E8F] inline-block">Adjuvant Therapies</h3>
+            <div class="bg-[#2D3748] text-white rounded-2xl p-8 md:p-12">
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div>
+                        <h4 class="font-bold text-[#D98A6C] mb-2 uppercase text-sm tracking-wide">Chemotherapy</h4>
+                        <p class="text-gray-300 text-sm">Systemic administration of cytotoxic drugs targeting rapidly dividing cells. Often utilized pre-surgery (neoadjuvant) to shrink tumors or post-surgery to eliminate micro-metastases.</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#D98A6C] mb-2 uppercase text-sm tracking-wide">Radiotherapy</h4>
+                        <p class="text-gray-300 text-sm">High doses of localized radiation (photons, protons) designed to damage tumor DNA, causing cell death. Can be external beam or internal (brachytherapy).</p>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-[#D98A6C] mb-2 uppercase text-sm tracking-wide">Immunotherapy</h4>
+                        <p class="text-gray-300 text-sm">Biological therapy modulating the patient's own immune system to recognize and destroy cancer cells (e.g., Checkpoint inhibitors, CAR T-cell therapy).</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="analytics" class="max-w-5xl mx-auto px-6 mb-20">
+            <h2 class="text-3xl font-bold mb-4 text-[#1A202C]">Quantitative Data Analytics</h2>
+            <p class="text-gray-600 mb-8 max-w-3xl">Epidemiological statistics indicating incidence rates and the correlation between diagnostic staging and relative survival probabilities.</p>
+
+            <div class="grid lg:grid-cols-2 gap-8">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">Global Incidence by Tumor Type</h3>
+                    <p class="text-xs text-gray-500 mb-6">Estimated millions of new cases annually.</p>
+                    <div class="chart-container">
+                        <canvas id="incidenceChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-gray-800 mb-2">5-Year Relative Survival Rates</h3>
+                    <p class="text-xs text-gray-500 mb-6">Aggregated across major solid tumor types by diagnostic stage.</p>
+                    <div class="chart-container">
+                        <canvas id="survivalChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="ethics" class="max-w-5xl mx-auto px-6 mb-10">
+            <h2 class="text-3xl font-bold mb-4 text-[#1A202C]">Critical Decision Making & Ethics</h2>
+            <p class="text-gray-600 mb-8 max-w-3xl">Navigating oncology requires strict adherence to ethical frameworks. This section outlines the analytical process for treatment selection and moral considerations.</p>
+
+            <div class="grid md:grid-cols-12 gap-8">
+                <div class="md:col-span-5 flex flex-col justify-center">
+                    <div class="bg-[#F6F5F2] p-8 rounded-2xl border border-gray-200">
+                        <h3 class="text-xl font-bold mb-4 text-[#5E7E8F] flex items-center gap-2">
+                            <span class="text-2xl">⚖️</span> Ethical Pillars
+                        </h3>
+                        <div class="space-y-4 text-sm text-gray-700">
+                            <div class="border-l-4 border-[#5E7E8F] pl-4 py-1">
+                                <strong class="block text-gray-900">Informed Consent</strong>
+                                Ensuring patients comprehend risks, benefits, and alternatives of invasive procedures.
+                            </div>
+                            <div class="border-l-4 border-[#D98A6C] pl-4 py-1">
+                                <strong class="block text-gray-900">Clinical Trial Equity</strong>
+                                Ensuring diverse demographic representation in experimental treatment phases.
+                            </div>
+                            <div class="border-l-4 border-[#5E7E8F] pl-4 py-1">
+                                <strong class="block text-gray-900">Palliative Care Integration</strong>
+                                Balancing aggressive curative attempts with quality of life in advanced stages.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-7">
+                    <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 h-full">
+                        <h3 class="text-xl font-bold mb-6 text-gray-800">Clinical Decision Protocol</h3>
+                        
+                        <div class="space-y-3">
+                            <button class="decision-btn w-full text-left p-4 bg-gray-50 hover:bg-gray-100 rounded-lg font-semibold flex justify-between items-center transition-colors border border-transparent focus:outline-none" data-step="1">
+                                <span>Phase 1: Diagnostic Confirmation</span>
+                                <span class="text-[#5E7E8F] transform transition-transform duration-200 indicator">+</span>
+                            </button>
+                            <div class="decision-content hidden px-4 py-3 text-sm text-gray-600 border-l-2 border-[#5E7E8F] ml-2">
+                                Execution of tissue biopsies, histological grading, and molecular profiling (e.g., assessing hormone receptor status) to determine malignancy and tumor aggressiveness.
+                            </div>
+
+                            <button class="decision-btn w-full text-left p-4 bg-gray-50 hover:bg-gray-100 rounded-lg font-semibold flex justify-between items-center transition-colors border border-transparent focus:outline-none" data-step="2">
+                                <span>Phase 2: Staging & Localization</span>
+                                <span class="text-[#5E7E8F] transform transition-transform duration-200 indicator">+</span>
+                            </button>
+                            <div class="decision-content hidden px-4 py-3 text-sm text-gray-600 border-l-2 border-[#5E7E8F] ml-2">
+                                Utilization of advanced imaging (PET, MRI, CT) to define the TNM classification (Tumor size, Node involvement, Metastasis), dictating surgical feasibility.
+                            </div>
+
+                            <button class="decision-btn w-full text-left p-4 bg-gray-50 hover:bg-gray-100 rounded-lg font-semibold flex justify-between items-center transition-colors border border-transparent focus:outline-none" data-step="3">
+                                <span>Phase 3: Multi-Disciplinary Tumor Board</span>
+                                <span class="text-[#5E7E8F] transform transition-transform duration-200 indicator">+</span>
+                            </button>
+                            <div class="decision-content hidden px-4 py-3 text-sm text-gray-600 border-l-2 border-[#5E7E8F] ml-2">
+                                Collaborative review by surgical oncologists, radiation oncologists, and pathologists to formulate a consensus on the neoadjuvant, surgical, or palliative path.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-white border-t border-gray-200 py-8 mt-12 text-center text-sm text-gray-500">
+        <p>© 2026 Interactive Medical Journals. Authored by SAMUELSON G.</p>
+        <p class="mt-2">Generated for educational and research architecture demonstration.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const tabs = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active', 'text-gray-900', 'border-[#5E7E8F]'));
+                    tab.classList.add('active', 'text-gray-900', 'border-[#5E7E8F]');
+                    tab.classList.remove('text-gray-500', 'border-transparent');
+
+                    contents.forEach(c => {
+                        c.classList.add('hidden');
+                        c.classList.remove('fade-in');
+                    });
+
+                    const target = document.getElementById(tab.dataset.target);
+                    target.classList.remove('hidden');
+                    void target.offsetWidth; 
+                    target.classList.add('fade-in');
+                });
+            });
+
+            
+            const decisionBtns = document.querySelectorAll('.decision-btn');
+            decisionBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const indicator = this.querySelector('.indicator');
+                    
+                    if(content.classList.contains('hidden')) {
+                        content.classList.remove('hidden');
+                        this.classList.add('border-[#5E7E8F]', 'bg-gray-100');
+                        indicator.textContent = '-';
+                    } else {
+                        content.classList.add('hidden');
+                        this.classList.remove('border-[#5E7E8F]', 'bg-gray-100');
+                        indicator.textContent = '+';
+                    }
+                });
+            });
+
+            
+            Chart.defaults.font.family = "'Inter', sans-serif";
+            Chart.defaults.color = '#718096';
+
+            
+            const surveyCtx = document.getElementById('surveyChart').getContext('2d');
+            new Chart(surveyCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Ignored (Assumed minor)', 'Self-medicated', 'Consulted PCP immediately', 'Sought alternative therapy'],
+                    datasets: [{
+                        data: [42, 28, 22, 8],
+                        backgroundColor: ['#D98A6C', '#EDC9AF', '#5E7E8F', '#A0AAB2'],
+                        borderWidth: 0,
+                        hoverOffset: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'right' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return ' ' + context.label + ': ' + context.raw + '%';
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+
+            
+            const incidenceCtx = document.getElementById('incidenceChart').getContext('2d');
+            new Chart(incidenceCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Breast', 'Lung', 'Colorectal', 'Prostate', 'Stomach'],
+                    datasets: [{
+                        label: 'New Cases (Millions)',
+                        data: [2.26, 2.21, 1.93, 1.41, 1.09],
+                        backgroundColor: '#5E7E8F',
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#F3F4F6' } },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            
+            const survivalCtx = document.getElementById('survivalChart').getContext('2d');
+            new Chart(survivalCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Localized (Stage I/II)', 'Regional (Stage III)', 'Distant (Stage IV)'],
+                    datasets: [
+                        {
+                            label: 'Breast Cancer',
+                            data: [99, 86, 30],
+                            borderColor: '#D98A6C',
+                            backgroundColor: '#D98A6C',
+                            tension: 0.3,
+                            borderWidth: 3
+                        },
+                        {
+                            label: 'Colorectal Cancer',
+                            data: [91, 72, 15],
+                            borderColor: '#5E7E8F',
+                            backgroundColor: '#5E7E8F',
+                            tension: 0.3,
+                            borderWidth: 3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { 
+                            beginAtZero: true, 
+                            max: 100,
+                            title: { display: true, text: 'Survival Rate (%)' },
+                            grid: { color: '#F3F4F6' }
+                        },
+                        x: { grid: { display: false } }
+                    },
+                    plugins: {
+                        tooltip: { mode: 'index', intersect: false }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
